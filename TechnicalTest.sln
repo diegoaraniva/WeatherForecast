@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherAPI.WebService", "WeatherAPI.WebService\WeatherAPI.WebService.csproj", "{319E32A1-3A34-4C51-9D85-F0026B57AD7B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherAPI.Domain", "WeatherAPI.Domain\WeatherAPI.Domain.csproj", "{DAC10383-336C-4DC9-A5E4-53B84AF392E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherAPI.Application", "WeatherAPI.Application\WeatherAPI.Application.csproj", "{1E3664AD-FC19-4A0D-A757-92A268799C16}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherAPI.UnitTesting", "WeatherAPI.UnitTesting\WeatherAPI.UnitTesting.csproj", "{2E3CF59B-B482-4E47-B745-1E604AA20C89}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{319E32A1-3A34-4C51-9D85-F0026B57AD7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{319E32A1-3A34-4C51-9D85-F0026B57AD7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{319E32A1-3A34-4C51-9D85-F0026B57AD7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{319E32A1-3A34-4C51-9D85-F0026B57AD7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DAC10383-336C-4DC9-A5E4-53B84AF392E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAC10383-336C-4DC9-A5E4-53B84AF392E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAC10383-336C-4DC9-A5E4-53B84AF392E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DAC10383-336C-4DC9-A5E4-53B84AF392E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E3664AD-FC19-4A0D-A757-92A268799C16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E3664AD-FC19-4A0D-A757-92A268799C16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E3664AD-FC19-4A0D-A757-92A268799C16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E3664AD-FC19-4A0D-A757-92A268799C16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E3CF59B-B482-4E47-B745-1E604AA20C89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E3CF59B-B482-4E47-B745-1E604AA20C89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E3CF59B-B482-4E47-B745-1E604AA20C89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E3CF59B-B482-4E47-B745-1E604AA20C89}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
