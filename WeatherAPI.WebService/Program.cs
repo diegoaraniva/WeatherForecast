@@ -11,6 +11,7 @@ using Domain.Services;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using DotNetEnv;
+using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,9 @@ builder.Services.AddCors(options =>
 });
 
 Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Database.Command", LogEventLevel.Error)
     .Enrich.FromLogContext()
     .WriteTo.Console()
     .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
@@ -42,8 +46,8 @@ builder.Services.AddHttpClient();
 builder.Services.AddMemoryCache();
 
 var connectionString = (builder.Environment.IsDevelopment())
-    ? builder.Configuration[Environment.GetEnvironmentVariable("ConnStringDev") ?? string.Empty]
-    : builder.Configuration[Environment.GetEnvironmentVariable("ConnString") ?? string.Empty];
+    ? Environment.GetEnvironmentVariable("ConnStringDev")
+    : Environment.GetEnvironmentVariable("ConnString");
 
 builder.Services.AddDbContext<AppDBContext>(options =>
     options.UseSqlite(connectionString)
