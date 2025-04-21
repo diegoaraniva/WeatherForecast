@@ -40,8 +40,8 @@ builder.Services.AddHttpClient();
 builder.Services.AddMemoryCache();
 
 var connectionString = (builder.Environment.IsDevelopment())
-    ? builder.Configuration[Environment.GetEnvironmentVariable("ConnStringDev") ?? string.Empty]
-    : builder.Configuration[Environment.GetEnvironmentVariable("ConnString") ?? string.Empty];
+    ? Environment.GetEnvironmentVariable("ConnStringDev") ?? string.Empty
+    : Environment.GetEnvironmentVariable("ConnString") ?? string.Empty;
 
 builder.Services.AddDbContext<AppDBContext>(options =>
     options.UseSqlite(connectionString)
