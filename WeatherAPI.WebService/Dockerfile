@@ -9,7 +9,6 @@ COPY ["WeatherAPI.WebService/WeatherAPI.WebService.csproj", "WeatherAPI.WebServi
 COPY ["WeatherAPI.UnitTesting/WeatherAPI.UnitTesting.csproj", "WeatherAPI.UnitTesting/"] 
 COPY ["WeatherAPI.Application/WeatherAPI.Application.csproj", "WeatherAPI.Application/"]
 COPY ["WeatherAPI.Domain/WeatherAPI.Domain.csproj", "WeatherAPI.Domain/"]
-COPY ["WeatherAPI.WebService/weathersSnapshots.db", "/app/weathersSnapshots.db"]
     
  
 RUN dotnet restore "WeatherAPI.WebService/WeatherAPI.WebService.csproj"
