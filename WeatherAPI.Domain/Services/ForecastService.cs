@@ -10,21 +10,19 @@ public class ForecastService : IForecastService
 {
     
     private readonly HttpClient _client;
-    private readonly OpenApi _openApi;
     private readonly AsyncCircuitBreakerPolicy<HttpResponseMessage> _circuitBreakerPolicy;
     
     public ForecastService(CircuitBreakerPolicyProvider policyProvider, IOptions<OpenApi> openApi)
     {
-        _openApi = openApi.Value;
         _client = new HttpClient();
         _circuitBreakerPolicy = policyProvider.GetPolicy();
     }
     
     public async Task<ForecastWeatherDTO> GetForecast()
     {
-        string apiKey = _openApi.APIKEYOpW;
-        string lat = _openApi.Lat;
-        string lon = _openApi.Lon;
+        string apiKey = Environment.GetEnvironmentVariable("APIKEYOpW") ?? string.Empty;
+        string lat = Environment.GetEnvironmentVariable("Lat") ?? string.Empty;
+        string lon = Environment.GetEnvironmentVariable("Lon") ?? string.Empty;
         string url = $"https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={apiKey}";
 
         try
