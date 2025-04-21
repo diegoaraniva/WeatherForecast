@@ -1,4 +1,6 @@
 ﻿using Domain.Dto.WeatherManagement.ForecastWeather;
+using Domain.Secrets;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Polly.CircuitBreaker;
 
@@ -6,20 +8,23 @@ namespace Domain.Services;
 
 public class ForecastService : IForecastService
 {
+    
     private readonly HttpClient _client;
+    private readonly OpenApi _openApi;
     private readonly AsyncCircuitBreakerPolicy<HttpResponseMessage> _circuitBreakerPolicy;
     
-    public ForecastService(CircuitBreakerPolicyProvider policyProvider)
+    public ForecastService(CircuitBreakerPolicyProvider policyProvider, IOptions<OpenApi> openApi)
     {
+        _openApi = openApi.Value;
         _client = new HttpClient();
         _circuitBreakerPolicy = policyProvider.GetPolicy();
     }
     
     public async Task<ForecastWeatherDTO> GetForecast()
     {
-        string apiKey = "91dc4115f3501094f7a6d21a54476583";
-        string lat = "13.6920";
-        string lon = "-89.2182";
+        string apiKey = _openApi.APIKEYOpW;
+        string lat = _openApi.Lat;
+        string lon = _openApi.Lon;
         string url = $"https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={apiKey}";
 
         try

@@ -10,5 +10,4 @@ public class ForecastRepositories : BaseRepositories<Forecast>, IForecastReposit
     
     public ForecastRepositories(AppDBContext context) : base(context) => _context = context;
     
-    
 }

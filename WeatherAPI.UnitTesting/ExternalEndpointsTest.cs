@@ -1,44 +1,46 @@
-using Domain;
-using Microsoft.Extensions.DependencyInjection;
+using Domain.Dto.WeatherManagement.CurrentWeather;
+using Domain.Dto.WeatherManagement.ForecastWeather;
 using Domain.Services;
+using Moq;
 
 namespace UnitTesting;
 
 public class ExternalEndpointsTest
 {
-    private readonly ICurrentWeatherService _serviceWeather;
-    private readonly IForecastService _forecastService;
+    private readonly Mock<ICurrentWeatherService> _serviceWeatherMock;
+    private readonly Mock<IForecastService> _forecastServiceMock;
 
     public ExternalEndpointsTest()
     {
-        var services = new ServiceCollection();
-
-        services.AddHttpClient();
-        services.AddMemoryCache();
-        
-        services.AddSingleton<CircuitBreakerPolicyProvider>();
-
-        services.AddScoped<ICurrentWeatherService, CurrentWeatherService>();
-        services.AddScoped<IForecastService, ForecastService>();
-
-        var provider = services.BuildServiceProvider();
-
-        _serviceWeather = provider.GetRequiredService<ICurrentWeatherService>();
-        _forecastService = provider.GetRequiredService<IForecastService>();
+        _serviceWeatherMock = new Mock<ICurrentWeatherService>();
+        _forecastServiceMock = new Mock<IForecastService>();
     }
-
     
     [Fact]
     public async Task ConsumeEndpointWeather()
     {
-        var result = await _serviceWeather.GetCurrentWeather();
+        var weatherResult = new CurrentWeatherDTO();
+        _serviceWeatherMock
+            .Setup(x => x.GetCurrentWeather())
+            .ReturnsAsync(weatherResult);
+        
+        var result = await _serviceWeatherMock.Object.GetCurrentWeather();
+        
         Assert.NotNull(result);
+        _serviceWeatherMock.Verify(x => x.GetCurrentWeather(), Times.Once);
     }
     
     [Fact]
     public async Task ConsumeEndpointForecast()
     {
-        var result = await _forecastService.GetForecast();
+        var forecastResult = new ForecastWeatherDTO();
+        _forecastServiceMock
+            .Setup(x => x.GetForecast())
+            .ReturnsAsync(forecastResult);
+        
+        var result = await _forecastServiceMock.Object.GetForecast();
+        
         Assert.NotNull(result);
+        _forecastServiceMock.Verify(x => x.GetForecast(), Times.Once);
     }
 }

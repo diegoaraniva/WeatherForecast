@@ -5,7 +5,8 @@ namespace TechnicalTest.Controllers;
 
 [ApiController]
 public class WeatherController(ICurrentWeatherHandler currentWeatherHandler, 
-    IForecastWeatherHandler forecastWeatherHandler) : Controller
+    IForecastWeatherHandler forecastWeatherHandler,
+    ILogger<WeatherController> logger) : Controller
 {
     [HttpGet("current")]
     public IActionResult Current()
@@ -17,6 +18,7 @@ public class WeatherController(ICurrentWeatherHandler currentWeatherHandler,
         }
         catch (Exception ex)
         {
+            logger.LogError("Internal server error. Please try again later. " + ex.Message);
             return StatusCode(500, "Internal server error. Please try again later. " + ex.Message);
         }
     }
@@ -31,6 +33,7 @@ public class WeatherController(ICurrentWeatherHandler currentWeatherHandler,
         }
         catch (Exception ex)
         {
+            logger.LogError("Internal server error. Please try again later. " + ex.Message);
             return StatusCode(500, "Internal server error. Please try again later. " + ex.Message);
         }
     }

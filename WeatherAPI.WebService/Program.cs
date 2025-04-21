@@ -1,24 +1,39 @@
 using Application.Handlers.WeatherManagement;
 using Application.Handlers.WeatherManagement.Interfaces;
+using Azure.Identity;
 using Domain;
 using Domain.Contexts;
 using Domain.Repositories.WeatherManagement;
 using Domain.Repositories.WeatherManagement.interfaces;
 using Domain.Repositories.WeatherManagement.Interfaces;
+using Domain.Secrets;
 using Domain.Services;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
+using DotNetEnv;
 
 var builder = WebApplication.CreateBuilder(args);
+
+Env.Load();
+
+builder.Configuration
+    .AddAzureKeyVault(new Uri("https://forecastvault.vault.azure.net/"), new DefaultAzureCredential());
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:4200")
+        policy.WithOrigins(builder.Configuration["FrontEndOrigin"] ?? "")
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
 });
+
+Log.Logger = new LoggerConfiguration()
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -30,11 +45,13 @@ builder.Services.AddHttpClient();
 builder.Services.AddMemoryCache();
 
 var connectionString = (builder.Environment.IsDevelopment())
-    ? builder.Configuration.GetConnectionString("DefaultDevConnection")
-    : builder.Configuration.GetConnectionString("DefaultConnection");
+    ? builder.Configuration["ConnStringDev"]
+    : builder.Configuration["ConnString"];
 
 builder.Services.AddDbContext<AppDBContext>(options =>
-    options.UseSqlite(connectionString));
+    options.UseSqlite(connectionString)
+        .EnableSensitiveDataLogging()
+        .LogTo(msg => Log.Information(msg)));
 
 builder.Services.AddSingleton<CircuitBreakerPolicyProvider>();
         
@@ -47,7 +64,12 @@ builder.Services.AddScoped<IForecastRepositories, ForecastRepositories>();
 builder.Services.AddScoped<ICurrentWeatherHandler, CurrentWeatherHandler>();
 builder.Services.AddScoped<IForecastWeatherHandler, ForecastWeatherHandler>();
 
-builder.WebHost.UseUrls("http://0.0.0.0:80");
+if (!builder.Environment.IsDevelopment())
+    builder.WebHost.UseUrls("http://0.0.0.0:80");
+
+builder.Host.UseSerilog();
+
+builder.Services.Configure<OpenApi>(builder.Configuration);
 
 var app = builder.Build();
 
@@ -66,12 +88,14 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("AllowFrontend");
 
-app.UseHttpsRedirection();
+app.UseSerilogRequestLogging();
 
-app.UseAuthorization();
+app.UseHttpsRedirection();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "/{controller}/{action}/{id?}");
+
+app.UseAuthorization();
 
 app.Run();
